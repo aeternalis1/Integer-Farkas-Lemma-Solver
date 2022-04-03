@@ -1,4 +1,4 @@
-To run the solver, install the dependencies in requirements.txt via the command
+To run the solver, clone this repository and install the dependencies in requirements.txt via the command
 
 > pip install -r requirements.txt
 
