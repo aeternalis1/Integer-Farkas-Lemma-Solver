@@ -42,7 +42,6 @@ def index():
 		try:
 			M = ParseInput(m, n, mat)
 			res = Solve(M)
-			print ("res:", res.t)
 			return render_template("result.html", m=form.m.data, n=form.n.data, res=res)
 		except InputError as e:
 			flash("Invalid input: %s" % e)

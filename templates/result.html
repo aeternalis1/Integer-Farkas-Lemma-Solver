@@ -7,6 +7,29 @@
 {% block content %}
 	{% if res.t == 1 %}
 		<h1> There exists no integer solution.</h1>
+		<div class="ctr">The original system was</div>
+		<h2> 
+			\begin{align*}
+				A = \begin{pmatrix}
+				{% for i in range(m) %}
+					{% for j in range(n) %}
+						{{res.ogMat[i,j]}}
+						{% if j != n-1 %} &
+						{% endif %}
+					{% endfor %}
+					\\
+				{% endfor %}
+			\end{pmatrix} &&
+			b = \begin{pmatrix}
+				{% for i in range(m) %}
+					{{res.ogMat[i,n]}}
+					{% if j != m-1 %} \\
+					{% endif %}
+				{% endfor %}
+			\end{pmatrix}
+			\end{align*}
+		</h2>
+		<div class="ctr"> Which, when scaled, becomes </div>
 		<h2> \begin{align*}
 				A = \begin{pmatrix}
 				{% for i in range(m) %}
@@ -88,6 +111,29 @@
 		</div>
 	{% else %}
 		<h1> There exists an integer solution. </h1>
+		<div class="ctr">The original system was</div>
+		<h2> 
+			\begin{align*}
+				A = \begin{pmatrix}
+				{% for i in range(m) %}
+					{% for j in range(n) %}
+						{{res.ogMat[i,j]}}
+						{% if j != n-1 %} &
+						{% endif %}
+					{% endfor %}
+					\\
+				{% endfor %}
+			\end{pmatrix} &&
+			b = \begin{pmatrix}
+				{% for i in range(m) %}
+					{{res.ogMat[i,n]}}
+					{% if j != m-1 %} \\
+					{% endif %}
+				{% endfor %}
+			\end{pmatrix}
+			\end{align*}
+		</h2>
+		<div class="ctr"> Which, when scaled, becomes </div>
 		<h2> \begin{align*}
 				A = \begin{pmatrix}
 				{% for i in range(m) %}

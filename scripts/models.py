@@ -5,6 +5,11 @@ class Rational:
 		self.n = n
 		self.d = d
 
+	def __str__(self):
+		if self.n == 0 or self.d == 1:
+			return str(self.n)
+		return "%d/%d" % (self.n, self.d)
+
 
 class Operation:
 	def __init__(self, t, c1, c2 = None, m = None):
@@ -25,11 +30,12 @@ class Operation:
 
 class Result:
 	def __init__(
-		self, t, ops, mats, A, B, invB, b, invBb, ogSol,
+		self, t, ops, ogMat, mats, A, B, invB, b, invBb, ogSol,
 		sol, nonIntInd=None, sols=None, barY=None, barYM=None, barYb=None
 	):
 		self.t = t
 		self.ops = ops
+		self.ogMat = ogMat
 		self.mats = mats
 		self.A = A
 		self.B = B

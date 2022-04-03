@@ -7,7 +7,6 @@ from random import randint
 
 sys.setrecursionlimit(1000000000)
 
-
 def ConvertToHNF(M, bmark=False):
 	'''
 	Accepts an integer m by n matrix M of full row rank and returns
@@ -163,13 +162,6 @@ def GetGCDVec(arr):
 				topdown(n, i*2+1)
 				return
 
-		# error detection: should never reach here
-		print (a,b,c)
-		print (g[2*i], g[2*i+1])
-		print (z[i*2], z[i*2+1])
-		sys.exit()
-
-
 	bottomup(n, 1)
 	z[2] = y[2]
 	z[3] = y[3]
@@ -268,34 +260,3 @@ def ConvertToHNF2(M, bmark=False):
 		return M, ops, maxInt
 
 	return M, ops, mats
-
-
-if __name__ == '__main__':
-	a = [
-		[2, 1, 3, 4],
-		[6, 7, 8, 9],
-		[11, 12, 13, 14]
-	]
-	M = np.array(a)
-
-	b = [
-		[2, 1, 4, 6],
-		[7, 2, 5, 5],
-		[8, 3, 10, 33]
-	]
-	M2 = np.array(b)
-
-	M, MOps, mats = ConvertToHNF2(M)
-	for i in M:
-		print (i)
-
-	'''
-	arr = [100, 88, 12]
-	a, b = GetGCDVec(arr)
-	print (a)
-	print (b)
-	res = 0
-	for i in range(len(arr)):
-		res += b[i] * arr[i]
-	print (res)
-	'''

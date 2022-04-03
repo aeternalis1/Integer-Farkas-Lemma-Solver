@@ -7,22 +7,6 @@ from copy import deepcopy
 import numpy as np
 import sympy as sy
 
-a = [
-	[2, 1, 3, 4],
-	[6, 7, 8, 9],
-	[11, 12, 13, 14]
-]
-
-M = np.array(a)
-
-b = [
-	[2, 0, 0, 0],
-	[6, 7, 0, 0],
-	[11, 12, 13, 0]
-]
-
-M2 = np.array(b)
-
 
 def Solve(M):
 	m, n = M.shape
@@ -33,6 +17,7 @@ def Solve(M):
 		for j in range(n):
 			den = LCM(den, M[i][j].d)
 
+	ogMat = deepcopy(M)
 	intM = np.array([[M[i][j].n * den // M[i][j].d for j in range(n)] for i in range(m)])
 	A = ConvertToRatMat(intM[:, :-1])
 
@@ -44,26 +29,19 @@ def Solve(M):
 
 	# candidate solution for HNF form is B^{-1}b
 	invB = ConvertToRatMat(B).inv()
-	print (invB)
 	invBb = invB * b
 	sol = sy.Matrix(list(invBb) + [sy.Rational('0') for x in range(n-m-1)])
-	print (sol)
 	# if any member of sol is not integer, then we identify which row
 	# in B^{-1} gave y^T B integer and y^T b not integer
 	for i in range(m):
-		print (i, sol[i])
 		if sol[i] != int(sol[i]):
 			barY = invB.row(i)
-			print ("No integer solution exists")
-			print (barY)
 			barYM = barY * A
-			print (barYM, len(barYM))
-			print (A, len(A))
 			barYb = barY * b
-			print (barYb)
 			res = Result(
 				1,
 				MOps,
+				ogMat,
 				MMats,
 				A,
 				B,
@@ -78,7 +56,6 @@ def Solve(M):
 				barYM,
 				barYb
 			)
-			print (res.ops, len(res.ops))
 			return res
 
 	# recover a solution using sol via back substitution
@@ -89,12 +66,10 @@ def Solve(M):
 		sols.append(deepcopy(sol))
 	sols = sols[::-1]
 
-	print ("Solution exists")
-	print (sol)
-	print (np.matmul(intM[:, :-1], sol))
 	res = Result(
 		0,
 		MOps,
+		ogMat,
 		MMats,
 		A,
 		B,
@@ -110,17 +85,3 @@ def Solve(M):
 		None
 	)
 	return res
-
-
-if __name__ == '__main__':
-	M = GetInput()
-	Solve(M)
-
-	'''
-	print (IsInHNF(M))
-	print (IsInHNF(M2))
-
-	M, MOps = ConvertToHNF(M2)
-	for i in M:
-		print (i)
-	'''
