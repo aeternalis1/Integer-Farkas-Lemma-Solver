@@ -1,0 +1,71 @@
+fieldset {
+	border: 0;
+}
+
+h1 {
+	font: 2rem 'Fira Sans', sans-serif;
+	font-weight: bold;
+	text-align: center;
+}
+
+h2 {
+	font: 1rem 'Fira Sans', sans-serif;
+	font-weight: bold;
+	text-align: center;
+}
+
+
+.title {
+	font: 2rem 'Fira Sans', sans-serif;
+	font-weight: bold;
+}
+
+.form-field {
+	font: 1rem 'Fira Sans', sans-serif;
+}
+
+.form-wrapper {
+	text-align: center;
+}
+
+.form-wrapper2 {
+	display: inline-block;
+	border-style: solid;
+	border-color: black;
+	border-width: 1px;
+	border-radius: 10px;
+	padding: 10px;
+}
+
+.flash {
+	color: red;
+}
+
+.cert {
+	text-align: center;
+	line-height: 200%;
+}
+
+.collapsible {
+	background-color: #eee;
+	color: #444;
+	cursor: pointer;
+	padding: 18px;
+	width: 100%;
+	border: none;
+	text-align: left;
+	outline: none;
+	font-size: 15px;
+}
+
+.active, .collapsible:hover {
+	background-color: #ccc;
+}
+
+.collapse {
+	line-height: 200%;
+	padding: 0 18px;
+	display: none;
+	overflow: hidden;
+	background-color: #f1f1f1;
+}

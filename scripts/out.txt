@@ -1,0 +1,5 @@
+5 x 5: avgTime: 0, maxTime: 1, avgOps: 36, maxOps: 43, avgMax: 287, maxMax: 289
+5 x 10: avgTime: 2, maxTime: 3, avgOps: 91, maxOps: 116, avgMax: 291, maxMax: 293
+10 x 10: avgTime: 47, maxTime: 55, avgOps: 150, maxOps: 175, avgMax: 9528, maxMax: 9530
+10 x 15: avgTime: 478, maxTime: 655, avgOps: 260, maxOps: 295, avgMax: 9647, maxMax: 9649
+15 x 15: avgTime: 34485, maxTime: 39092, avgOps: 343, maxOps: 376, avgMax: 307917, maxMax: 307919

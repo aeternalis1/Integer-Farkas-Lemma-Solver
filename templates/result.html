@@ -1,0 +1,338 @@
+{% extends 'base.html' %}
+
+{% block header %}
+	<h1>{% block title %} Results {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+	{% if res.t == 1 %}
+		<h1> There exists no integer solution.</h1>
+		<h2> \begin{align*}
+				A = \begin{pmatrix}
+				{% for i in range(m) %}
+					{% for j in range(n) %}
+						{{res.A.row(i).col(j)[0]}}
+						{% if j != n-1 %} &
+						{% endif %}
+					{% endfor %}
+					\\
+				{% endfor %}
+			\end{pmatrix} &&
+			b = \begin{pmatrix}
+				{% for i in range(m) %}
+					{{res.b[i]}}
+					{% if j != m-1 %} \\
+					{% endif %}
+				{% endfor %}
+			\end{pmatrix}
+			\end{align*}
+		</h2>
+		<div class="cert">
+			Our certificate is \(\bar y = 
+			\begin{pmatrix}
+				{% for i in range(res.barY|length) %}
+					{{res.barY[i]}}
+					{% if i != res.barY|length-1 %} &
+					{% endif %}
+				{% endfor %}
+			\end{pmatrix}
+			\), which yields
+			\begin{align*}
+			\bar yA &= 
+			\begin{pmatrix}
+				{% for i in range(res.barY|length) %}
+					{{res.barY[i]}}
+					{% if i != res.barY|length-1 %} &
+					{% endif %}
+				{% endfor %}
+			\end{pmatrix}
+			\cdot 
+			\begin{pmatrix}
+				{% for i in range(m) %}
+					{% for j in range(n) %}
+						{{res.A.row(i).col(j)[0]}}
+						{% if j != n-1 %} &
+						{% endif %}
+					{% endfor %}
+					\\
+				{% endfor %}
+			\end{pmatrix} \\
+			&=
+			\begin{pmatrix}
+				{% for i in range(res.barYM|length) %}
+					{{res.barYM[i]}}
+					{% if i != res.barYM|length-1 %} &
+					{% endif %}
+				{% endfor %}
+			\end{pmatrix} \\
+			\bar yb &=
+			\begin{pmatrix}
+				{% for i in range(res.barY|length) %}
+					{{res.barY[i]}}
+					{% if i != res.barY|length-1 %} &
+					{% endif %}
+				{% endfor %}
+			\end{pmatrix}
+			\cdot 
+			\begin{pmatrix}
+				{% for i in range(m) %}
+					{{res.b[i]}}
+					{% if j != m-1 %} \\
+					{% endif %}
+				{% endfor %}
+			\end{pmatrix} \\
+			&=
+			{{res.barYb[0]}}
+			\end{align*}
+		Which shows no integer solution \(x\) can exist, otherwise \(\bar y Ax = \bar y b\) would raise a contradiction.
+		</div>
+	{% else %}
+		<h1> There exists an integer solution. </h1>
+		<h2> \begin{align*}
+				A = \begin{pmatrix}
+				{% for i in range(m) %}
+					{% for j in range(n) %}
+						{{res.A.row(i).col(j)[0]}}
+						{% if j != n-1 %} &
+						{% endif %}
+					{% endfor %}
+					\\
+				{% endfor %}
+			\end{pmatrix} &&
+			b = \begin{pmatrix}
+				{% for i in range(m) %}
+					{{res.b[i]}}
+					{% if j != m-1 %} \\
+					{% endif %}
+				{% endfor %}
+			\end{pmatrix}
+			\end{align*}
+		</h2>
+		<div class="cert">
+			Our certificate is \(\bar x = 
+			\begin{pmatrix}
+				{% for i in range(n) %}
+					{{res.sol[i]}}
+					{% if i != n-1 %} \\
+					{% endif %}
+				{% endfor %}
+			\end{pmatrix}
+			\), which yields
+			\begin{align*}
+			A \bar x &= 
+			\begin{pmatrix}
+				{% for i in range(m) %}
+					{% for j in range(n) %}
+						{{res.A.row(i).col(j)[0]}}
+						{% if j != n-1 %} &
+						{% endif %}
+					{% endfor %}
+					\\
+				{% endfor %}
+			\end{pmatrix}
+			\cdot 
+			\begin{pmatrix}
+				{% for i in range(n) %}
+					{{res.sol[i]}}
+					{% if i != n-1 %} \\
+					{% endif %}
+				{% endfor %}
+			\end{pmatrix} \\
+			&= \begin{pmatrix}
+				{% for i in range(m) %}
+					{{res.b[i]}}
+					{% if j != m-1 %} \\
+					{% endif %}
+				{% endfor %}
+			\end{pmatrix}
+			\end{align*}
+		Which is proof of existence of an integer solution.
+		</div>
+	{% endif %}
+	<br> <h2> Solution steps: </h2> <br>
+	<button type="button" class="collapsible"><strong>Step 1:</strong> Convert \(A\) to Hermite Normal Form</button>
+	<div class="collapse">
+		{% if res.ops|length == 0 %}
+			The matrix is already in Hermite Normal Form.
+		{% endif %}
+
+		{% for i in range(res.ops|length) %}
+			<strong> Operation {{i+1}}: </strong> 
+			{% if res.ops[i].type == 1 %}
+				Type 1 - Swap Column {{res.ops[i].c1+1}} and Column {{res.ops[i].c2+1}}
+			{% elif res.ops[i].type == 2 %}
+				Type 2 - Negate Column {{res.ops[i].c1+1}}
+			{% else %}
+				Type 3 - Add {{res.ops[i].m}} \(\cdot\) Column {{res.ops[i].c2+1}} to Column {{res.ops[i].c1+1}}
+			{% endif %}
+			\begin{align*}
+				\begin{pmatrix}
+				{% for j in range(m) %}
+					{% for k in range(n) %}
+						{{res.mats[i][j,k]}}
+						{% if k != n-1 %} &
+						{% endif %}
+					{% endfor %}
+					\\
+				{% endfor %}
+				\end{pmatrix} 
+				\rightarrow
+				\begin{pmatrix}
+				{% for j in range(m) %}
+					{% for k in range(n) %}
+						{{res.mats[i+1][j,k]}}
+						{% if k != n-1 %} &
+						{% endif %}
+					{% endfor %}
+					\\
+				{% endfor %}
+				\end{pmatrix} 
+			\end{align*}
+		{% endfor %}
+	</div>
+	&nbsp;
+	<button type="button" class="collapsible"><strong>Step 2:</strong> Find \(B^{-1}\) and test \(B^{-1}b\)</button>
+	<div class="collapse">
+		We take \(B\) such that the HNF matrix is of the form \(\begin{pmatrix} B & 0 \end{pmatrix}\):
+		\begin{align*}
+			B &= \begin{pmatrix}
+				{% for i in range(m) %}
+					{% for j in range(m) %}
+						{{res.B[i,j]}}
+						{% if j != m-1 %} &
+						{% endif %}
+					{% endfor %}
+					\\
+				{% endfor %}
+			\end{pmatrix} \\\\
+			B^{-1} &= \begin{pmatrix}
+				{% for i in range(m) %}
+					{% for j in range(m) %}
+						{{res.invB.row(i).col(j)[0]}}
+						{% if j != m-1 %} &
+						{% endif %}
+					{% endfor %}
+					\\
+				{% endfor %}
+			\end{pmatrix} \\\\
+			B^{-1}b &= 
+			\begin{pmatrix}
+				{% for i in range(m) %}
+					{% for j in range(m) %}
+						{{res.invB.row(i).col(j)[0]}}
+						{% if j != m-1 %} &
+						{% endif %}
+					{% endfor %}
+					\\
+				{% endfor %}
+			\end{pmatrix}
+			\cdot 
+			\begin{pmatrix}
+				{% for i in range(m) %}
+					{{res.b[i]}}
+					{% if j != m-1 %} \\
+					{% endif %}
+				{% endfor %}
+			\end{pmatrix} \\
+			&=
+			\begin{pmatrix}
+				{% for i in range(m) %}
+					{{res.invBb[i]}}
+					{% if i != m-1 %} &
+					{% endif %}
+				{% endfor %}
+			\end{pmatrix}
+		\end{align*}
+
+		{% if res.t == 1 %}
+			Since \(B^{-1}b\) has a noninteger component (column {{res.nonIntInd + 1}}), we take the corresponding row in \(B^{-1}\) to be our certificate. Namely
+			\begin{align*}
+				\bar y &= \begin{pmatrix}
+				{% for i in range(res.barY|length) %}
+					{{res.barY[i]}}
+					{% if i != res.barY|length-1 %} &
+					{% endif %}
+				{% endfor %}
+			\end{pmatrix}
+			\end{align*}
+		{% else %}
+			Since \(B^{-1}b\) is integer, we extend it with zeroes to obtain solution \(\bar x = 
+			\begin{pmatrix}
+				{% for i in range(n) %}
+					{{res.ogSol[i]}}
+					{% if i != n-1 %} &
+					{% endif %}
+				{% endfor %}
+			\end{pmatrix}
+			\) for the system \(A'x = b\), where \(A'\) is the HNF matrix obtained from \(A\). Then in step 3, we will reverse the operations from step 1 to obtain a solution for \(Ax = b\).
+		{% endif %}
+	</div>
+	{% if res.t == 0 %}
+	&nbsp;
+	<button type="button" class="collapsible"><strong>Step 3:</strong> Reverse matrix operations to recover a solution for \(Ax = b\)</button>
+	<div class="collapse">
+		We now reverse the operations from step 1:
+		{% if res.ops|length == 0 %}
+			there were no operations to reverse.
+		{% endif %}<br>
+		{% for i in range(res.ops|length-1, -1, -1) %}
+			<strong> Operation {{i+1}}: </strong> 
+			{% if res.ops[i].type == 1 %}
+				Type 1 - Swap Column {{res.ops[i].c1+1}} and Column {{res.ops[i].c2+1}} <br>
+				&nbsp;&nbsp;&nbsp;&nbsp; Reverse - Swap Column {{res.ops[i].c1+1}} and Column {{res.ops[i].c2+1}}
+			{% elif res.ops[i].type == 2 %}
+				Type 2 - Negate Column {{res.ops[i].c1+1}} <br>
+				&nbsp;&nbsp;&nbsp;&nbsp; Reverse - Negate Column {{res.ops[i].c1+1}}
+			{% else %}
+				Type 3 - Add {{res.ops[i].m}} \(\cdot\) Column {{res.ops[i].c2+1}} to Column {{res.ops[i].c1+1}} <br>
+				&nbsp;&nbsp;&nbsp;&nbsp; Reverse - Add {{res.ops[i].m}} \(\cdot\) Column {{res.ops[i].c1+1}} to Column {{res.ops[i].c2+1}}
+			{% endif %}
+			\begin{align*}
+				\begin{pmatrix}
+				{% for j in range(n) %}
+					{{res.sols[i+1][j]}}
+					{% if j != n-1 %} &
+					{% endif %}
+				{% endfor %}
+				\end{pmatrix} 
+				\rightarrow
+				\begin{pmatrix}
+				{% for j in range(n) %}
+					{{res.sols[i][j]}}
+					{% if j != n-1 %} &
+					{% endif %}
+				{% endfor %}
+				\end{pmatrix} 
+			\end{align*}
+		{% endfor %}
+		Hence we find the solution
+		\begin{align*}
+			\bar x = \begin{pmatrix}
+			{% for j in range(n) %}
+				{{res.sol[j]}}
+				{% if j != n-1 %} &
+				{% endif %}
+			{% endfor %}
+			\end{pmatrix}
+		\end{align*}
+		for the system \(Ax = b\).
+	</div>
+	{% endif %}
+
+	<script type="text/javascript">
+		var coll = document.getElementsByClassName("collapsible");
+		var i;
+
+		for (i = 0; i < coll.length; i++) {
+		  coll[i].addEventListener("click", function() {
+		    this.classList.toggle("active");
+		    var collapse = this.nextElementSibling;
+		    if (collapse.style.display === "block") {
+		      collapse.style.display = "none";
+		    } else {
+		      collapse.style.display = "block";
+		    }
+		  });
+		}
+	</script>
+{% endblock %}

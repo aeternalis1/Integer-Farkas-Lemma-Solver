@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block header %}
+	<h1>{% block title %} Integer Farkas Lemma Solver {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+	<div class="form-wrapper">
+      <h2 class="title">Integer Farkas Lemma Solver</h2>
+
+      <div class="form-wrapper2">
+	      <form method="POST">
+	      	  {{ form.csrf_token }}
+	          {{ form.m.label }}
+	          <fieldset class="form-field">
+	              {{ form.m }}
+	          </fieldset>
+
+	          {{ form.n.label }}
+	          <fieldset class="form-field">
+	              {{ form.n }}
+	          </fieldset>
+
+	          {{ form.mat.label }}
+	          <fieldset class="form-field">
+	              {{ form.mat }}
+	          </fieldset>
+
+	          {{ form.submit }}
+
+		{% for message in get_flashed_messages() %}
+			<div class="flash">{{message}}</div>
+		{% endfor %}
+	      </form>
+      </div>
+    </div>
+{% endblock %}
